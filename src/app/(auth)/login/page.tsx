@@ -17,10 +17,12 @@ export default function LoginPage() {
     setMessage(null)
 
     try {
+      // Use NEXT_PUBLIC_SITE_URL if available (for production), otherwise use window.location.origin
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${siteUrl}/auth/callback`,
         },
       })
 
