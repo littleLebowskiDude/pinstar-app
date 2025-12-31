@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Stop-Process -Force)",
+      "Bash(pkill:*)",
+      "Bash(taskkill //F //IM node.exe 2)",
+      "Bash(nul)",
+      "Bash(Get-Process)",
+      "Bash(Where-Object { $_rocessName -match \"node\" })",
+      "Bash(npx supabase db push:*)",
+      "Bash(npx supabase:*)",
+      "Bash(node test-resend.js:*)",
+      "Bash(del:*)",
+      "Bash(npm install:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm run build:*)",
+      "Bash(pnpm run dev)",
+      "Bash(Select-Object ProcessName, Id)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
