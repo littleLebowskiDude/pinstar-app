@@ -8,6 +8,7 @@ export const searchRouter = router({
   /**
    * Search pins by text
    * Uses PostgreSQL full-text search on title and description
+   * Only returns pins created by the current user
    */
   pins: publicProcedure
     .input(
@@ -17,8 +18,17 @@ export const searchRouter = router({
       })
     )
     .query(async ({ ctx, input }) => {
+      const userId = ctx.user?.id
+
+      if (!userId) {
+        return []
+      }
+
       const { data: pins, error } = await ctx.supabase
-        .rpc('search_pins', { search_query: input.query })
+        .rpc('search_pins', {
+          search_query: input.query,
+          user_id: userId
+        })
         .limit(input.limit)
 
       if (error) throw new Error(error.message)
@@ -77,6 +87,7 @@ export const searchRouter = router({
   /**
    * Search both pins and boards
    * Returns top results from each
+   * Only searches the current user's pins and boards
    */
   all: publicProcedure
     .input(
@@ -89,10 +100,21 @@ export const searchRouter = router({
     .query(async ({ ctx, input }) => {
       const userId = ctx.user?.id || null
 
+      // If no user is logged in, return empty results
+      if (!userId) {
+        return {
+          pins: [],
+          boards: [],
+        }
+      }
+
       // Search pins and boards in parallel
       const [pinsResult, boardsResult] = await Promise.all([
         ctx.supabase
-          .rpc('search_pins', { search_query: input.query })
+          .rpc('search_pins', {
+            search_query: input.query,
+            user_id: userId,
+          })
           .limit(input.pinLimit),
         ctx.supabase
           .rpc('search_boards', {
