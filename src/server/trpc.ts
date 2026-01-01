@@ -40,6 +40,32 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
     })
   }
 
+  // Ensure profile exists for the user (handles cases where trigger didn't fire)
+  const { data: profile } = await ctx.supabase
+    .from('profiles')
+    .select('id')
+    .eq('id', ctx.user.id)
+    .single()
+
+  // If profile doesn't exist, create it
+  if (!profile) {
+    const { error: profileError } = await ctx.supabase
+      .from('profiles')
+      .insert({
+        id: ctx.user.id,
+        username: ctx.user.user_metadata?.username || ctx.user.email?.split('@')[0] || `user_${ctx.user.id.substring(0, 8)}`,
+        display_name: ctx.user.user_metadata?.display_name || ctx.user.email || 'Anonymous User',
+        avatar_url: ctx.user.user_metadata?.avatar_url || '',
+      })
+
+    if (profileError) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Failed to create user profile: ${profileError.message}`,
+      })
+    }
+  }
+
   return next({
     ctx: {
       ...ctx,
