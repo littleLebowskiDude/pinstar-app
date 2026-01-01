@@ -30,7 +30,7 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
   const { success, error: showError } = useToast()
 
   // tRPC hooks
-  const { data: boards = [] } = trpc.boards.getMyBoards.useQuery(undefined, {
+  const { data: boards = [], refetch: refetchBoards } = trpc.boards.getMyBoards.useQuery(undefined, {
     enabled: isOpen, // Only fetch when modal is open
   })
   const createPin = trpc.pins.create.useMutation({
@@ -41,6 +41,19 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
     },
     onError: (err) => {
       showError(err.message || 'Failed to create pin')
+    },
+  })
+  const createBoard = trpc.boards.create.useMutation({
+    onSuccess: (newBoard) => {
+      success('Board created successfully!')
+      refetchBoards()
+      setPinData({ ...pinData, boardId: newBoard.id })
+      setIsCreatingBoard(false)
+      setNewBoardName('')
+      setNewBoardDescription('')
+    },
+    onError: (err) => {
+      showError(err.message || 'Failed to create board')
     },
   })
 
@@ -62,6 +75,11 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
     sourceUrl: '',
   })
 
+  // Create board state
+  const [isCreatingBoard, setIsCreatingBoard] = useState(false)
+  const [newBoardName, setNewBoardName] = useState('')
+  const [newBoardDescription, setNewBoardDescription] = useState('')
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden'
@@ -74,6 +92,9 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
       setImageDimensions(null)
       setPinData({ title: '', description: '', sourceUrl: '' })
       setError(null)
+      setIsCreatingBoard(false)
+      setNewBoardName('')
+      setNewBoardDescription('')
     }
 
     return () => {
@@ -206,6 +227,16 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
 
       xhr.open('POST', uploadUrl)
       xhr.send(formData)
+    })
+  }
+
+  const handleCreateBoard = async () => {
+    if (!newBoardName.trim()) return
+
+    await createBoard.mutateAsync({
+      name: newBoardName.trim(),
+      description: newBoardDescription.trim() || undefined,
+      isPrivate: false,
     })
   }
 
@@ -455,18 +486,62 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
                       </button>
                     ))}
 
-                    <button
-                      className="p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-gray-400 transition-colors flex flex-col items-center justify-center gap-2"
-                      onClick={() => {
-                        // TODO: Implement create board functionality
-                        alert('Create board functionality coming soon!')
-                      }}
-                    >
-                      <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                      </svg>
-                      <span className="text-sm font-semibold text-gray-600">Create Board</span>
-                    </button>
+                    {!isCreatingBoard ? (
+                      <button
+                        className="p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-gray-400 transition-colors flex flex-col items-center justify-center gap-2"
+                        onClick={() => setIsCreatingBoard(true)}
+                      >
+                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span className="text-sm font-semibold text-gray-600">Create Board</span>
+                      </button>
+                    ) : (
+                      <div className="col-span-2 p-4 border-2 border-red-300 rounded-xl bg-red-50">
+                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Create New Board</h4>
+                        <div className="space-y-3">
+                          <div>
+                            <input
+                              type="text"
+                              value={newBoardName}
+                              onChange={(e) => setNewBoardName(e.target.value)}
+                              placeholder="Board name"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm"
+                              autoFocus
+                            />
+                          </div>
+                          <div>
+                            <textarea
+                              value={newBoardDescription}
+                              onChange={(e) => setNewBoardDescription(e.target.value)}
+                              placeholder="Description (optional)"
+                              rows={2}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm resize-none"
+                            />
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={handleCreateBoard}
+                              disabled={!newBoardName.trim() || createBoard.isPending}
+                              className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              {createBoard.isPending ? 'Creating...' : 'Create'}
+                            </button>
+                            <button
+                              onClick={() => {
+                                setIsCreatingBoard(false)
+                                setNewBoardName('')
+                                setNewBoardDescription('')
+                              }}
+                              disabled={createBoard.isPending}
+                              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-semibold rounded-lg transition-colors disabled:opacity-50"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
