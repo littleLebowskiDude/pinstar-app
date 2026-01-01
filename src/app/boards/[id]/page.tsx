@@ -63,11 +63,6 @@ export default async function BoardPage({ params }: BoardPageProps) {
   // Check if user is the owner
   const isOwner = user?.id === board.owner_id
 
-  // If not owner, redirect to login
-  if (!isOwner) {
-    redirect('/login')
-  }
-
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-[1260px] mx-auto px-4 py-8">
