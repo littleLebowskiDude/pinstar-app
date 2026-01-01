@@ -1,39 +1,68 @@
 'use client'
 
-import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { trpc } from '@/lib/trpc/client'
 import MasonryGrid from '@/components/pins/MasonryGrid'
 import PinCard from '@/components/pins/PinCard'
 import BoardCard from '@/components/boards/BoardCard'
 
 export default function SearchPage() {
+  const router = useRouter()
   const searchParams = useSearchParams()
-  const query = searchParams.get('q') || ''
+  const queryParam = searchParams.get('q') || ''
+  const [query, setQuery] = useState(queryParam)
   const [activeTab, setActiveTab] = useState<'pins' | 'boards'>('pins')
+
+  // Update local query state when URL query changes
+  useEffect(() => {
+    setQuery(queryParam)
+  }, [queryParam])
 
   // Fetch search results
   const { data: pinResults, isLoading: pinsLoading } = trpc.search.pins.useQuery(
-    { query, limit: 50 },
-    { enabled: query.length > 0 }
+    { query: queryParam, limit: 50 },
+    { enabled: queryParam.length > 0 }
   )
 
   const { data: boardResults, isLoading: boardsLoading } =
     trpc.search.boards.useQuery(
-      { query, limit: 50 },
-      { enabled: query.length > 0 }
+      { query: queryParam, limit: 50 },
+      { enabled: queryParam.length > 0 }
     )
 
   const isLoading = activeTab === 'pins' ? pinsLoading : boardsLoading
   const pins = pinResults || []
   const boards = boardResults || []
 
-  if (!query) {
-    return (
-      <div className="max-w-[1260px] mx-auto px-4 py-12">
-        <div className="text-center py-20">
+  // Handle search submission
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (query.trim()) {
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`)
+    }
+  }
+
+  // Handle input change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value)
+  }
+
+  return (
+    <div className="max-w-[1260px] mx-auto px-4 py-8">
+      {/* Search Input */}
+      <div className="mb-8">
+        <form onSubmit={handleSearch} className="relative max-w-2xl mx-auto">
+          <input
+            type="text"
+            value={query}
+            onChange={handleInputChange}
+            placeholder="Search your pins and boards..."
+            className="w-full px-4 py-3 pl-12 pr-4 text-gray-900 placeholder-gray-500 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all shadow-sm"
+            autoFocus
+          />
           <svg
-            className="mx-auto h-12 w-12 text-gray-400"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -45,71 +74,65 @@ export default function SearchPage() {
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             />
           </svg>
-          <h3 className="mt-4 text-lg font-medium text-gray-900">
-            Enter a search query
-          </h3>
-          <p className="mt-2 text-sm text-gray-500">
-            Use the search bar above to find pins and boards
+        </form>
+      </div>
+
+      {/* Results Header */}
+      {queryParam && (
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Search results for &quot;{queryParam}&quot;
+          </h1>
+          <p className="text-gray-600">
+            {activeTab === 'pins'
+              ? `${pins.length} pins found`
+              : `${boards.length} boards found`}
           </p>
         </div>
-      </div>
-    )
-  }
+      )}
 
-  return (
-    <div className="max-w-[1260px] mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Search results for &quot;{query}&quot;
-        </h1>
-        <p className="text-gray-600">
-          {activeTab === 'pins'
-            ? `${pins.length} pins found`
-            : `${boards.length} boards found`}
-        </p>
-      </div>
-
-      {/* Tabs */}
-      <div className="border-b border-gray-200 mb-8">
-        <nav className="-mb-px flex space-x-8">
-          <button
-            onClick={() => setActiveTab('pins')}
-            className={`
-              py-4 px-1 border-b-2 font-medium text-sm transition-colors
-              ${
-                activeTab === 'pins'
-                  ? 'border-red-600 text-red-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }
-            `}
-          >
-            Pins
-            <span className="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-100 text-gray-600">
-              {pins.length}
-            </span>
-          </button>
-          <button
-            onClick={() => setActiveTab('boards')}
-            className={`
-              py-4 px-1 border-b-2 font-medium text-sm transition-colors
-              ${
-                activeTab === 'boards'
-                  ? 'border-red-600 text-red-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }
-            `}
-          >
-            Boards
-            <span className="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-100 text-gray-600">
-              {boards.length}
-            </span>
-          </button>
-        </nav>
-      </div>
+      {/* Tabs - Only show when there's a query */}
+      {queryParam && (
+        <div className="border-b border-gray-200 mb-8">
+          <nav className="-mb-px flex space-x-8">
+            <button
+              onClick={() => setActiveTab('pins')}
+              className={`
+                py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                ${
+                  activeTab === 'pins'
+                    ? 'border-red-600 text-red-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }
+              `}
+            >
+              Pins
+              <span className="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-100 text-gray-600">
+                {pins.length}
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab('boards')}
+              className={`
+                py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                ${
+                  activeTab === 'boards'
+                    ? 'border-red-600 text-red-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }
+              `}
+            >
+              Boards
+              <span className="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-100 text-gray-600">
+                {boards.length}
+              </span>
+            </button>
+          </nav>
+        </div>
+      )}
 
       {/* Loading State */}
-      {isLoading && (
+      {queryParam && isLoading && (
         <div className="text-center py-20">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Searching...</p>
@@ -117,7 +140,7 @@ export default function SearchPage() {
       )}
 
       {/* Pins Tab */}
-      {!isLoading && activeTab === 'pins' && (
+      {queryParam && !isLoading && activeTab === 'pins' && (
         <>
           {pins.length > 0 ? (
             <MasonryGrid
@@ -160,7 +183,7 @@ export default function SearchPage() {
       )}
 
       {/* Boards Tab */}
-      {!isLoading && activeTab === 'boards' && (
+      {queryParam && !isLoading && activeTab === 'boards' && (
         <>
           {boards.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
