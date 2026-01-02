@@ -152,6 +152,8 @@ export default function SearchPage() {
                 width: pin.image_width || 400,
                 height: pin.image_height || 600,
                 sourceUrl: pin.source_url || undefined,
+                source: pin.source,
+                attribution: pin.attribution,
                 userId: pin.created_by,
                 createdAt: new Date(pin.created_at),
               }))}

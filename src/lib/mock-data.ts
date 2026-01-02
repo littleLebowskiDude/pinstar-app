@@ -8,6 +8,13 @@ export interface Pin {
   userId?: string
   boardId?: string
   createdAt?: Date
+  source?: string
+  sourceUrl?: string
+  attribution?: {
+    photographer: string
+    photographerUrl: string
+    unsplashUrl: string
+  }
 }
 
 // Mock pin data with varied dimensions for natural masonry layout

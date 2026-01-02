@@ -26,6 +26,8 @@ export default function PinFeed() {
     height: pin.image_height,
     userId: pin.created_by,
     sourceUrl: pin.source_url,
+    source: pin.source,
+    attribution: pin.attribution,
     createdAt: new Date(pin.created_at),
   }))
 
