@@ -46,7 +46,10 @@ export const boardsRouter = router({
               description,
               image_url,
               image_width,
-              image_height
+              image_height,
+              source_url,
+              source,
+              attribution
             )
           )
         `)
