@@ -18,7 +18,7 @@ export default function PinFeed() {
 
   // Transform pins to match the Pin interface
   const transformedPins = pins.map((pin: any) => ({
-    id: parseInt(pin.id) || 0, // Convert UUID to number for compatibility
+    id: pin.id, // Keep UUID as string
     title: pin.title,
     description: pin.description,
     imageUrl: pin.image_url,

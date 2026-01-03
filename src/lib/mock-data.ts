@@ -1,5 +1,5 @@
 export interface Pin {
-  id: number
+  id: number | string  // Support both number (mock data) and string (UUID from database)
   title: string
   description?: string
   imageUrl: string

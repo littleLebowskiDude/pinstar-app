@@ -19,7 +19,8 @@ export default function PinGridWithModal({ pins }: PinGridWithModalProps) {
   useEffect(() => {
     const pinId = searchParams.get('pin')
     if (pinId) {
-      const pin = pins.find((p) => p.id === parseInt(pinId))
+      // Handle both number and string (UUID) ids
+      const pin = pins.find((p) => String(p.id) === pinId)
       if (pin) {
         setSelectedPin(pin)
         setIsModalOpen(true)

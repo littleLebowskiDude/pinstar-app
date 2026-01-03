@@ -145,7 +145,7 @@ export default function SearchPage() {
           {pins.length > 0 ? (
             <MasonryGrid
               pins={pins.map((pin) => ({
-                id: parseInt(pin.id) || 0,
+                id: pin.id, // Keep UUID as string
                 title: pin.title,
                 description: pin.description || undefined,
                 imageUrl: pin.image_url,
