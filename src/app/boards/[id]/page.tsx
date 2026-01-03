@@ -30,7 +30,10 @@ async function getBoard(id: string, userId?: string) {
           description,
           image_url,
           image_width,
-          image_height
+          image_height,
+          source_url,
+          source,
+          attribution
         )
       )
     `)

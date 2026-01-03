@@ -41,6 +41,8 @@ export const searchRouter = router({
         image_width: number | null
         image_height: number | null
         source_url: string | null
+        source: string | null
+        attribution: any | null
         created_by: string
         created_at: string
         rank: number
@@ -136,6 +138,8 @@ export const searchRouter = router({
           image_width: number | null
           image_height: number | null
           source_url: string | null
+          source: string | null
+          attribution: any | null
           created_by: string
           created_at: string
           rank: number

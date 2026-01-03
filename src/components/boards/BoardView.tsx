@@ -62,6 +62,9 @@ export default function BoardView({ boardId, initialBoard }: BoardViewProps) {
     imageUrl: bp.pins?.image_url || '',
     width: bp.pins?.image_width || 400,
     height: bp.pins?.image_height || 400,
+    sourceUrl: bp.pins?.source_url,
+    source: bp.pins?.source,
+    attribution: bp.pins?.attribution,
   })).filter((pin: Pin) => pin.imageUrl) || []
 
   return (

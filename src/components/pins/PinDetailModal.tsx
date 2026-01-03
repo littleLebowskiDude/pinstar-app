@@ -193,20 +193,48 @@ export default function PinDetailModal({ pin, isOpen, onClose }: PinDetailModalP
               </div>
             </div>
 
+            {/* Unsplash Attribution (if applicable) */}
+            {pin.source === 'unsplash' && pin.attribution && (
+              <div className="mb-6 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <p className="text-xs text-gray-600">
+                  Photo by{' '}
+                  <a
+                    href={pin.attribution.photographerUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-900 hover:underline font-medium"
+                  >
+                    {pin.attribution.photographer}
+                  </a>{' '}
+                  on{' '}
+                  <a
+                    href={pin.attribution.unsplashUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-900 hover:underline font-medium"
+                  >
+                    Unsplash
+                  </a>
+                </p>
+              </div>
+            )}
+
             {/* Source Link (if available) */}
-            <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">
-                Source
-              </h3>
-              <a
-                href={pin.imageUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline text-sm break-all"
-              >
-                {pin.imageUrl}
-              </a>
-            </div>
+            {pin.sourceUrl && (
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">
+                  Source
+                </h3>
+                <a
+                  href={pin.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline text-sm break-all"
+                >
+                  {pin.sourceUrl}
+                </a>
+              </div>
+            )}
 
             {/* Additional Info */}
             <div className="border-t border-gray-200 pt-6">
