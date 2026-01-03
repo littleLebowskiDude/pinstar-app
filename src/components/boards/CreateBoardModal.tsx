@@ -94,17 +94,17 @@ export default function CreateBoardModal({ isOpen, onClose, onSuccess }: CreateB
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn"
       onClick={handleBackdropClick}
     >
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full animate-scaleIn">
+      <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl max-w-lg w-full animate-scaleIn">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900">Create Board</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Create Board</h2>
           <button
             onClick={onClose}
             disabled={createBoard.isPending}
-            className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors disabled:opacity-50"
+            className="w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors disabled:opacity-50"
             aria-label="Close"
           >
-            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -121,7 +121,7 @@ export default function CreateBoardModal({ isOpen, onClose, onSuccess }: CreateB
           <div className="space-y-4">
             {/* Name Input */}
             <div>
-              <label htmlFor="board-name" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="board-name" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Name *
               </label>
               <input
@@ -130,19 +130,19 @@ export default function CreateBoardModal({ isOpen, onClose, onSuccess }: CreateB
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., Home Decor Ideas"
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 maxLength={100}
                 required
                 autoFocus
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {formData.name.length}/100 characters
               </p>
             </div>
 
             {/* Description Input */}
             <div>
-              <label htmlFor="board-description" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="board-description" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Description (optional)
               </label>
               <textarea
@@ -151,11 +151,11 @@ export default function CreateBoardModal({ isOpen, onClose, onSuccess }: CreateB
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 placeholder="What's your board about?"
                 rows={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all resize-none"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all resize-none dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 maxLength={500}
               />
               {formData.description && (
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                   {formData.description.length}/500 characters
                 </p>
               )}
@@ -174,10 +174,10 @@ export default function CreateBoardModal({ isOpen, onClose, onSuccess }: CreateB
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-red-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-gray-900">
+                  <div className="text-sm font-semibold text-gray-900 dark:text-white">
                     Keep this board private
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
                     Only you can see this board
                   </div>
                 </div>
@@ -186,12 +186,12 @@ export default function CreateBoardModal({ isOpen, onClose, onSuccess }: CreateB
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-3 mt-6 pt-6 border-t border-gray-200">
+          <div className="flex items-center justify-end gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
             <button
               type="button"
               onClick={onClose}
               disabled={createBoard.isPending}
-              className="px-6 py-2.5 text-gray-700 font-semibold hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50"
+              className="px-6 py-2.5 text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors disabled:opacity-50"
             >
               Cancel
             </button>

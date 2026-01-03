@@ -79,14 +79,14 @@ export default function BoardView({ boardId, initialBoard }: BoardViewProps) {
                   type="text"
                   value={editData.name}
                   onChange={(e) => setEditData({ ...editData, name: e.target.value })}
-                  className="text-3xl font-bold text-gray-900 border-b-2 border-red-600 focus:outline-none w-full"
+                  className="text-3xl font-bold text-gray-900 dark:text-white border-b-2 border-red-600 focus:outline-none w-full dark:bg-transparent"
                   maxLength={100}
                 />
                 <textarea
                   value={editData.description}
                   onChange={(e) => setEditData({ ...editData, description: e.target.value })}
                   placeholder="Board description..."
-                  className="text-gray-600 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 w-full"
+                  className="text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 w-full dark:bg-gray-800 dark:placeholder-gray-500"
                   rows={2}
                   maxLength={500}
                 />
@@ -95,9 +95,9 @@ export default function BoardView({ boardId, initialBoard }: BoardViewProps) {
                     type="checkbox"
                     checked={editData.isPrivate}
                     onChange={(e) => setEditData({ ...editData, isPrivate: e.target.checked })}
-                    className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                    className="w-4 h-4 text-red-600 border-gray-300 dark:border-gray-600 rounded focus:ring-red-500"
                   />
-                  <span className="text-sm text-gray-700">Private board</span>
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Private board</span>
                 </label>
               </div>
             ) : (
