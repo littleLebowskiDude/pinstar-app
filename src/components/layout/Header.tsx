@@ -19,16 +19,6 @@ export default async function Header() {
             PinStar
           </Link>
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-4 flex-shrink-0">
-            <Link
-              href="/discover"
-              className="text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors"
-            >
-              Discover
-            </Link>
-          </nav>
-
           {/* Search Bar - Hidden on mobile */}
           <div className="hidden md:block flex-1">
             <SearchBar />
