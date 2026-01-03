@@ -274,24 +274,24 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-scaleIn">
+      <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-scaleIn">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900">Create Pin</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Create Pin</h2>
           <button
             onClick={onClose}
             disabled={isUploading}
-            className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors disabled:opacity-50"
+            className="w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors disabled:opacity-50"
             aria-label="Close"
           >
-            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         {/* Progress Steps */}
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between max-w-md mx-auto">
             <div className="flex flex-col items-center gap-2">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
@@ -299,34 +299,34 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
               }`}>
                 {step !== 'upload' ? '✓' : '1'}
               </div>
-              <span className="text-xs font-medium text-gray-600">Upload</span>
+              <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Upload</span>
             </div>
 
             <div className={`flex-1 h-1 mx-4 rounded ${
-              step !== 'upload' ? 'bg-green-500' : 'bg-gray-200'
+              step !== 'upload' ? 'bg-green-500' : 'bg-gray-200 dark:bg-gray-700'
             }`} />
 
             <div className="flex flex-col items-center gap-2">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
                 step === 'details' ? 'bg-red-600 text-white' :
-                step === 'board' ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-600'
+                step === 'board' ? 'bg-green-500 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
               }`}>
                 {step === 'board' ? '✓' : '2'}
               </div>
-              <span className="text-xs font-medium text-gray-600">Details</span>
+              <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Details</span>
             </div>
 
             <div className={`flex-1 h-1 mx-4 rounded ${
-              step === 'board' ? 'bg-green-500' : 'bg-gray-200'
+              step === 'board' ? 'bg-green-500' : 'bg-gray-200 dark:bg-gray-700'
             }`} />
 
             <div className="flex flex-col items-center gap-2">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
-                step === 'board' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-600'
+                step === 'board' ? 'bg-red-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
               }`}>
                 3
               </div>
-              <span className="text-xs font-medium text-gray-600">Board</span>
+              <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Board</span>
             </div>
           </div>
         </div>
@@ -349,12 +349,12 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
                 onClick={() => fileInputRef.current?.click()}
                 className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-colors ${
                   isDragging
-                    ? 'border-red-600 bg-red-50'
-                    : 'border-gray-300 hover:border-gray-400 bg-gray-50'
+                    ? 'border-red-600 bg-red-50 dark:bg-red-900/20'
+                    : 'border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600 bg-gray-50 dark:bg-gray-800'
                 }`}
               >
                 <svg
-                  className="mx-auto w-16 h-16 text-gray-400 mb-4"
+                  className="mx-auto w-16 h-16 text-gray-400 dark:text-gray-500 mb-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -366,10 +366,10 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
                     d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                   />
                 </svg>
-                <p className="text-lg font-semibold text-gray-700 mb-2">
+                <p className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">
                   Drop your image here, or click to select
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   JPG, PNG, WebP, or GIF (max 1MB after compression)
                 </p>
               </div>
@@ -411,7 +411,7 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
               {/* Form Fields */}
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="title" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="title" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                     Title *
                   </label>
                   <input
@@ -420,13 +420,13 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
                     value={pinData.title}
                     onChange={(e) => setPinData({ ...pinData, title: e.target.value })}
                     placeholder="Add a title for your pin"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                     required
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="description" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                     Description
                   </label>
                   <textarea
@@ -435,12 +435,12 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
                     onChange={(e) => setPinData({ ...pinData, description: e.target.value })}
                     placeholder="Tell everyone what your pin is about"
                     rows={4}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all resize-none dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="sourceUrl" className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label htmlFor="sourceUrl" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                     Source URL
                   </label>
                   <input
@@ -449,7 +449,7 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
                     value={pinData.sourceUrl}
                     onChange={(e) => setPinData({ ...pinData, sourceUrl: e.target.value })}
                     placeholder="https://example.com"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                   />
                 </div>
               </div>
@@ -460,10 +460,10 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
           {step === 'board' && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Select a board</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Select a board</h3>
 
                 {boards.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                     <p className="mb-4">You don't have any boards yet!</p>
                     <p className="text-sm">Create your first board to save pins.</p>
                   </div>
@@ -475,12 +475,12 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
                         onClick={() => setPinData({ ...pinData, boardId: board.id })}
                         className={`p-4 border-2 rounded-xl text-left transition-all ${
                           pinData.boardId === board.id
-                            ? 'border-red-600 bg-red-50'
-                            : 'border-gray-200 hover:border-gray-300'
+                            ? 'border-red-600 bg-red-50 dark:bg-red-900/20'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                         }`}
                       >
-                        <div className="font-semibold text-gray-900 truncate">{board.name}</div>
-                        <div className="text-sm text-gray-500 mt-1">
+                        <div className="font-semibold text-gray-900 dark:text-white truncate">{board.name}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                           {board.board_pins?.[0]?.count || 0} pins
                         </div>
                       </button>
@@ -488,17 +488,17 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
 
                     {!isCreatingBoard ? (
                       <button
-                        className="p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-gray-400 transition-colors flex flex-col items-center justify-center gap-2"
+                        className="p-4 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl hover:border-gray-400 dark:hover:border-gray-600 transition-colors flex flex-col items-center justify-center gap-2"
                         onClick={() => setIsCreatingBoard(true)}
                       >
-                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-8 h-8 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>
-                        <span className="text-sm font-semibold text-gray-600">Create Board</span>
+                        <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">Create Board</span>
                       </button>
                     ) : (
-                      <div className="col-span-2 p-4 border-2 border-red-300 rounded-xl bg-red-50">
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Create New Board</h4>
+                      <div className="col-span-2 p-4 border-2 border-red-300 dark:border-red-700 rounded-xl bg-red-50 dark:bg-red-900/20">
+                        <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Create New Board</h4>
                         <div className="space-y-3">
                           <div>
                             <input
@@ -506,7 +506,7 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
                               value={newBoardName}
                               onChange={(e) => setNewBoardName(e.target.value)}
                               placeholder="Board name"
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm"
+                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                               autoFocus
                             />
                           </div>
@@ -516,7 +516,7 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
                               onChange={(e) => setNewBoardDescription(e.target.value)}
                               placeholder="Description (optional)"
                               rows={2}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm resize-none"
+                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none text-sm resize-none dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                             />
                           </div>
                           <div className="flex gap-2">
@@ -534,7 +534,7 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
                                 setNewBoardDescription('')
                               }}
                               disabled={createBoard.isPending}
-                              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm font-semibold rounded-lg transition-colors disabled:opacity-50"
+                              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-semibold rounded-lg transition-colors disabled:opacity-50"
                             >
                               Cancel
                             </button>
@@ -550,10 +550,10 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
               {isUploading && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium text-gray-700">Uploading...</span>
-                    <span className="text-gray-500">{uploadProgress}%</span>
+                    <span className="font-medium text-gray-700 dark:text-gray-200">Uploading...</span>
+                    <span className="text-gray-500 dark:text-gray-400">{uploadProgress}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                     <div
                       className="bg-red-600 h-full transition-all duration-300"
                       style={{ width: `${uploadProgress}%` }}
@@ -566,7 +566,7 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-gray-200 flex items-center justify-between gap-4">
+        <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between gap-4">
           {step !== 'upload' && (
             <button
               onClick={() => {
@@ -574,7 +574,7 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
                 else if (step === 'board') setStep('details')
               }}
               disabled={isUploading}
-              className="px-6 py-2.5 text-gray-700 font-semibold hover:bg-gray-100 rounded-full transition-colors disabled:opacity-50"
+              className="px-6 py-2.5 text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors disabled:opacity-50"
             >
               Back
             </button>
@@ -585,7 +585,7 @@ export default function CreatePinModal({ isOpen, onClose }: CreatePinModalProps)
           {step === 'upload' && (
             <button
               onClick={onClose}
-              className="px-6 py-2.5 text-gray-700 font-semibold hover:bg-gray-100 rounded-full transition-colors"
+              className="px-6 py-2.5 text-gray-700 dark:text-gray-200 font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
             >
               Cancel
             </button>

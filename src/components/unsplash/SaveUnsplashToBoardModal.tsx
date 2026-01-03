@@ -121,17 +121,17 @@ export default function SaveUnsplashToBoardModal({
         className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn"
         onClick={handleBackdropClick}
       >
-        <div className="relative bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-scaleIn">
+        <div className="relative bg-white dark:bg-gray-900 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-scaleIn">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900">Save to Board</h2>
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Save to Board</h2>
             <button
               onClick={onClose}
               disabled={isSaving}
-              className="w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors disabled:opacity-50"
+              className="w-10 h-10 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full flex items-center justify-center transition-colors disabled:opacity-50"
               aria-label="Close"
             >
-              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -141,7 +141,7 @@ export default function SaveUnsplashToBoardModal({
           <div className="flex-1 overflow-y-auto p-6">
             {/* Photo Preview */}
             <div className="mb-6">
-              <div className="relative rounded-xl overflow-hidden bg-gray-100">
+              <div className="relative rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
                 <Image
                   src={photo.thumbUrl}
                   alt={photo.alt}
@@ -152,7 +152,7 @@ export default function SaveUnsplashToBoardModal({
                 />
               </div>
               {/* Attribution */}
-              <div className="mt-2 text-xs text-gray-600">
+              <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">
                 Photo by{' '}
                 <a
                   href={photo.photographerUrl}
@@ -176,7 +176,7 @@ export default function SaveUnsplashToBoardModal({
 
             {/* Title Input */}
             <div className="mb-4">
-              <label htmlFor="pin-title" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="pin-title" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Title
               </label>
               <input
@@ -185,14 +185,14 @@ export default function SaveUnsplashToBoardModal({
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Add a title..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 maxLength={200}
               />
             </div>
 
             {/* Description Input */}
             <div className="mb-6">
-              <label htmlFor="pin-description" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="pin-description" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
                 Description (optional)
               </label>
               <textarea
@@ -201,22 +201,22 @@ export default function SaveUnsplashToBoardModal({
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Add a description..."
                 rows={3}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all resize-none"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all resize-none dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 maxLength={1000}
               />
             </div>
 
             {/* Boards List */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">Select a board</h3>
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">Select a board</h3>
               {isLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-red-600 border-r-transparent"></div>
                 </div>
               ) : boards.length === 0 ? (
-                <div className="text-center py-8 bg-gray-50 rounded-xl">
+                <div className="text-center py-8 bg-gray-50 dark:bg-gray-800 rounded-xl">
                   <svg
-                    className="mx-auto w-12 h-12 text-gray-300 mb-3"
+                    className="mx-auto w-12 h-12 text-gray-300 dark:text-gray-600 mb-3"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -228,8 +228,8 @@ export default function SaveUnsplashToBoardModal({
                       d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
                     />
                   </svg>
-                  <p className="text-gray-600 text-sm">You don't have any boards yet</p>
-                  <p className="text-xs text-gray-500 mt-1">Create a board to save this photo</p>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">You don't have any boards yet</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Create a board to save this photo</p>
                 </div>
               ) : (
                 <div className="space-y-2 max-h-60 overflow-y-auto">
@@ -240,12 +240,12 @@ export default function SaveUnsplashToBoardModal({
                       disabled={isSaving}
                       className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all ${
                         selectedBoardId === board.id && isSaving
-                          ? 'border-red-600 bg-red-50'
-                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          ? 'border-red-600 bg-red-50 dark:bg-red-900/20'
+                          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800'
                       } disabled:opacity-50`}
                     >
                       <div className="flex items-center gap-3 flex-1 text-left">
-                        <div className="w-10 h-10 rounded-lg bg-gray-200 flex-shrink-0 overflow-hidden">
+                        <div className="w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex-shrink-0 overflow-hidden">
                           {board.board_pins?.[0]?.pins?.image_url ? (
                             <img
                               src={board.board_pins[0].pins.image_url}
@@ -255,7 +255,7 @@ export default function SaveUnsplashToBoardModal({
                           ) : (
                             <div className="w-full h-full flex items-center justify-center">
                               <svg
-                                className="w-5 h-5 text-gray-400"
+                                className="w-5 h-5 text-gray-400 dark:text-gray-500"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -271,10 +271,10 @@ export default function SaveUnsplashToBoardModal({
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-gray-900 truncate text-sm">
+                          <p className="font-semibold text-gray-900 dark:text-white truncate text-sm">
                             {board.name}
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
                             {board.board_pins?.[0]?.count || 0} pins
                           </p>
                         </div>
@@ -290,11 +290,11 @@ export default function SaveUnsplashToBoardModal({
           </div>
 
           {/* Create New Board Button */}
-          <div className="p-6 border-t border-gray-200">
+          <div className="p-6 border-t border-gray-200 dark:border-gray-700">
             <button
               onClick={() => setIsCreateBoardOpen(true)}
               disabled={isSaving}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold rounded-xl transition-colors disabled:opacity-50"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
