@@ -10,14 +10,26 @@ export const boardsRouter = router({
       .from('boards')
       .select(`
         *,
-        board_pins (count)
+        board_pins (
+          pins (
+            image_url,
+            image_width,
+            image_height
+          )
+        )
       `)
       .eq('owner_id', ctx.user.id)
       .order('created_at', { ascending: false })
 
     if (error) throw new Error(error.message)
 
-    return boards
+    // Transform to include count
+    const boardsWithCount = (boards || []).map((board) => ({
+      ...board,
+      _count: { board_pins: board.board_pins?.length || 0 }
+    }))
+
+    return boardsWithCount
   }),
 
   /**
@@ -77,7 +89,13 @@ export const boardsRouter = router({
         .from('boards')
         .select(`
           *,
-          board_pins (count)
+          board_pins (
+            pins (
+              image_url,
+              image_width,
+              image_height
+            )
+          )
         `)
         .eq('owner_id', input.userId)
         .order('created_at', { ascending: false })
@@ -91,7 +109,13 @@ export const boardsRouter = router({
 
       if (error) throw new Error(error.message)
 
-      return boards
+      // Transform to include count
+      const boardsWithCount = (boards || []).map((board) => ({
+        ...board,
+        _count: { board_pins: board.board_pins?.length || 0 }
+      }))
+
+      return boardsWithCount
     }),
 
   /**
