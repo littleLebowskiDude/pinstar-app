@@ -34,9 +34,12 @@ export function getTRPCClient() {
     links: [
       httpBatchLink({
         url: `${getBaseUrl()}/api/trpc`,
-        // Include credentials to send cookies for authentication
-        fetchOptions: {
-          credentials: 'include',
+        // Use custom fetch to include credentials for authentication
+        fetch(url, options) {
+          return fetch(url, {
+            ...options,
+            credentials: 'include',
+          })
         },
         async headers() {
           return {}
