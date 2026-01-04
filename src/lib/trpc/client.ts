@@ -34,11 +34,12 @@ export function getTRPCClient() {
     links: [
       httpBatchLink({
         url: `${getBaseUrl()}/api/trpc`,
-        // You can pass any HTTP headers you wish here
+        // Include credentials to send cookies for authentication
+        fetchOptions: {
+          credentials: 'include',
+        },
         async headers() {
-          return {
-            // Include cookies for authentication
-          }
+          return {}
         },
       }),
     ],
