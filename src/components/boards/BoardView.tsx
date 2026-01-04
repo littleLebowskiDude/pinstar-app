@@ -56,15 +56,15 @@ export default function BoardView({ boardId, initialBoard }: BoardViewProps) {
 
   // Transform board pins to Pin format
   const pins: Pin[] = board?.board_pins?.map((bp: any) => ({
-    id: parseInt(bp.pins?.id) || 0,
-    title: bp.pins?.title || '',
-    description: bp.pins?.description,
-    imageUrl: bp.pins?.image_url || '',
-    width: bp.pins?.image_width || 400,
-    height: bp.pins?.image_height || 400,
-    sourceUrl: bp.pins?.source_url,
-    source: bp.pins?.source,
-    attribution: bp.pins?.attribution,
+    id: parseInt(bp.pin?.id) || 0,
+    title: bp.pin?.title || '',
+    description: bp.pin?.description,
+    imageUrl: bp.pin?.image_url || '',
+    width: bp.pin?.image_width || 400,
+    height: bp.pin?.image_height || 400,
+    sourceUrl: bp.pin?.source_url,
+    source: bp.pin?.source,
+    attribution: bp.pin?.attribution,
   })).filter((pin: Pin) => pin.imageUrl) || []
 
   return (

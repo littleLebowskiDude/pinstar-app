@@ -24,7 +24,7 @@ async function getBoard(id: string, userId?: string) {
         pin_id,
         position,
         added_at,
-        pins (
+        pin:pin_id (
           id,
           title,
           description,

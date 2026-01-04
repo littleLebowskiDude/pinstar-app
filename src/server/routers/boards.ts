@@ -11,7 +11,7 @@ export const boardsRouter = router({
       .select(`
         *,
         board_pins (
-          pins (
+          pin:pin_id (
             image_url,
             image_width,
             image_height
@@ -52,7 +52,7 @@ export const boardsRouter = router({
             pin_id,
             position,
             added_at,
-            pins (
+            pin:pin_id (
               id,
               title,
               description,
@@ -90,7 +90,7 @@ export const boardsRouter = router({
         .select(`
           *,
           board_pins (
-            pins (
+            pin:pin_id (
               image_url,
               image_width,
               image_height
