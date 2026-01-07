@@ -19,7 +19,18 @@
       "Bash(pnpm run dev)",
       "Bash(Select-Object ProcessName, Id)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(npx tsc:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd Unsplash integration for image discovery\n\nThis PR adds Unsplash integration to enable users to discover and save images from Unsplash:\n\n- Add /discover page with Unsplash photo search and browsing\n- Implement server actions for Unsplash API integration\n- Add source attribution tracking (source, sourceUrl, attribution fields)\n- Update Pin interface to support Unsplash metadata\n- Add \"Discover\" navigation link to header\n- Create SaveUnsplashToBoardModal for saving Unsplash photos to boards\n- Add proper Unsplash attribution display in PinDetailModal\n- Update database schema to support new attribution fields\n- Add UNSPLASH_ACCESS_KEY to environment variables\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(gh pr create:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nFix TypeScript build error for search attribution fields\n\n- Update search_pins function to return source and attribution fields\n- Add new migration to update database function\n- Fix TypeScript type definitions in search router\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(timeout:*)",
+      "Bash(copy \"C:\\\\Users\\\\angusfl\\\\pinstar.app\\\\pinstar-app\\\\PinStarlogo.png\" \"C:\\\\Users\\\\angusfl\\\\pinstar.app\\\\pinstar-app\\\\public\\\\logo.png\")",
+      "Bash(taskkill:*)"
     ],
     "deny": [],
     "ask": []
