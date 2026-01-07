@@ -10,6 +10,12 @@ interface BoardPageProps {
 async function getBoard(id: string, userId?: string) {
   const supabase = await createClient()
 
+  // Build access filter: public boards OR user's own boards
+  // This bypasses RLS auth.uid() issues in server components
+  const accessFilter = userId
+    ? `is_private.eq.false,owner_id.eq.${userId}`
+    : 'is_private.eq.false'
+
   const { data: board, error } = await supabase
     .from('boards')
     .select(`
@@ -38,14 +44,10 @@ async function getBoard(id: string, userId?: string) {
       )
     `)
     .eq('id', id)
+    .or(accessFilter)
     .single()
 
   if (error || !board) {
-    return null
-  }
-
-  // Check if user has access to this board
-  if (board.is_private && board.owner_id !== userId) {
     return null
   }
 
