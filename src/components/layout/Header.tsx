@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import Image from 'next/image'
 import UserMenu from './UserMenu'
 import SearchBar from '@/components/search/SearchBar'
 
@@ -14,9 +15,16 @@ export default async function Header() {
           {/* Logo */}
           <Link
             href="/"
-            className="text-xl md:text-2xl font-bold text-red-600 hover:text-red-700 transition-colors flex-shrink-0"
+            className="flex-shrink-0 hover:opacity-90 transition-opacity"
           >
-            PinStar
+            <Image
+              src="/logo.png"
+              alt="PinStar"
+              width={120}
+              height={40}
+              className="h-8 md:h-10 w-auto"
+              priority
+            />
           </Link>
 
           {/* Search Bar - Hidden on mobile */}
