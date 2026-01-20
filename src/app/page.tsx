@@ -2,22 +2,30 @@
 
 import { useState, useEffect } from 'react'
 import { getPopularPhotos, searchPhotos, UnsplashPhoto } from '@/app/actions/unsplash'
+import { searchGiphy, GiphyImage } from '@/app/actions/giphy'
 import UnsplashPhotoCard from '@/components/unsplash/UnsplashPhotoCard'
+import GiphyPhotoCard from '@/components/giphy/GiphyPhotoCard'
 import SaveUnsplashToBoardModal from '@/components/unsplash/SaveUnsplashToBoardModal'
+import SaveGiphyToBoardModal from '@/components/giphy/SaveGiphyToBoardModal'
 import { MasonryGridSkeleton } from '@/components/ui/Skeleton'
 import { useToast } from '@/components/ui/ToastContext'
 
 export default function DiscoverPage() {
   const [photos, setPhotos] = useState<UnsplashPhoto[]>([])
+  const [gifs, setGifs] = useState<GiphyImage[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isSearching, setIsSearching] = useState(false)
   const [query, setQuery] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [page, setPage] = useState(1)
+  const [gifPage, setGifPage] = useState(1)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
-  const [showSaveModal, setShowSaveModal] = useState(false)
+  const [showUnsplashSaveModal, setShowUnsplashSaveModal] = useState(false)
+  const [showGiphySaveModal, setShowGiphySaveModal] = useState(false)
   const [selectedPhoto, setSelectedPhoto] = useState<UnsplashPhoto | null>(null)
+  const [selectedGif, setSelectedGif] = useState<GiphyImage | null>(null)
   const [savedPhotoIds, setSavedPhotoIds] = useState<Set<string>>(new Set())
+  const [savedGifIds, setSavedGifIds] = useState<Set<string>>(new Set())
 
   const { error: showError } = useToast()
 
@@ -43,7 +51,9 @@ export default function DiscoverPage() {
     try {
       const results = await getPopularPhotos(1, 20)
       setPhotos(results)
+      setGifs([]) // Clear GIFs when loading popular photos
       setPage(1)
+      setGifPage(1)
       setSearchQuery('')
     } catch (err) {
       console.error('Error loading photos:', err)
@@ -56,12 +66,14 @@ export default function DiscoverPage() {
   // Perform search (called by debounced effect)
   const performSearch = async () => {
     if (!query.trim()) {
-      // Empty query - load popular photos
+      // Empty query - load popular photos (Unsplash only)
       setIsSearching(true)
       try {
         const results = await getPopularPhotos(1, 20)
         setPhotos(results)
+        setGifs([]) // Clear GIFs
         setPage(1)
+        setGifPage(1)
         setSearchQuery('')
       } catch (err) {
         console.error('Error loading photos:', err)
@@ -72,16 +84,23 @@ export default function DiscoverPage() {
       return
     }
 
-    // Search with query
+    // Search with query - search both Unsplash and Giphy
     setIsSearching(true)
     try {
-      const results = await searchPhotos(query.trim(), 1, 20)
-      setPhotos(results)
+      // Search both Unsplash and Giphy in parallel
+      const [unsplashResults, giphyResults] = await Promise.all([
+        searchPhotos(query.trim(), 1, 20),
+        searchGiphy(query.trim(), 1, 20),
+      ])
+
+      setPhotos(unsplashResults)
+      setGifs(giphyResults)
       setPage(1)
+      setGifPage(1)
       setSearchQuery(query.trim())
     } catch (err) {
       console.error('Error searching photos:', err)
-      showError('Failed to search photos')
+      showError('Failed to search images')
     } finally {
       setIsSearching(false)
     }
@@ -103,16 +122,31 @@ export default function DiscoverPage() {
   const handleLoadMore = async () => {
     setIsLoadingMore(true)
     try {
-      const nextPage = page + 1
-      const results = searchQuery
-        ? await searchPhotos(searchQuery, nextPage, 20)
-        : await getPopularPhotos(nextPage, 20)
+      if (searchQuery) {
+        // When searching, load more from both sources
+        const nextPhotoPage = page + 1
+        const nextGifPage = gifPage + 1
 
-      setPhotos([...photos, ...results])
-      setPage(nextPage)
+        const [unsplashResults, giphyResults] = await Promise.all([
+          searchPhotos(searchQuery, nextPhotoPage, 20),
+          searchGiphy(searchQuery, nextGifPage, 20),
+        ])
+
+        setPhotos([...photos, ...unsplashResults])
+        setGifs([...gifs, ...giphyResults])
+        setPage(nextPhotoPage)
+        setGifPage(nextGifPage)
+      } else {
+        // When browsing popular, only load more Unsplash photos
+        const nextPage = page + 1
+        const results = await getPopularPhotos(nextPage, 20)
+
+        setPhotos([...photos, ...results])
+        setPage(nextPage)
+      }
     } catch (err) {
       console.error('Error loading more photos:', err)
-      showError('Failed to load more photos')
+      showError('Failed to load more images')
     } finally {
       setIsLoadingMore(false)
     }
@@ -121,18 +155,33 @@ export default function DiscoverPage() {
   // Handle save photo
   const handleSavePhoto = (photo: UnsplashPhoto) => {
     setSelectedPhoto(photo)
-    setShowSaveModal(true)
+    setShowUnsplashSaveModal(true)
   }
 
-  // Handle close modal
-  const handleCloseModal = () => {
-    setShowSaveModal(false)
+  // Handle save GIF
+  const handleSaveGif = (gif: GiphyImage) => {
+    setSelectedGif(gif)
+    setShowGiphySaveModal(true)
+  }
+
+  // Handle close modals
+  const handleCloseUnsplashModal = () => {
+    setShowUnsplashSaveModal(false)
     setSelectedPhoto(null)
   }
 
-  // Handle successful save
-  const handleSaveSuccess = (photoId: string) => {
+  const handleCloseGiphyModal = () => {
+    setShowGiphySaveModal(false)
+    setSelectedGif(null)
+  }
+
+  // Handle successful saves
+  const handlePhotoSaveSuccess = (photoId: string) => {
     setSavedPhotoIds((prev) => new Set(prev).add(photoId))
+  }
+
+  const handleGifSaveSuccess = (gifId: string) => {
+    setSavedGifIds((prev) => new Set(prev).add(gifId))
   }
 
   return (
@@ -200,7 +249,7 @@ export default function DiscoverPage() {
         </h1>
         <p className="text-gray-600">
           {searchQuery
-            ? `${photos.length} photos found`
+            ? `${photos.length} photos and ${gifs.length} GIFs found`
             : 'Popular photos from Unsplash'}
         </p>
       </div>
@@ -210,16 +259,27 @@ export default function DiscoverPage() {
         <MasonryGridSkeleton count={12} />
       )}
 
-      {/* Photos Grid */}
-      {!isLoading && photos.length > 0 && (
+      {/* Photos and GIFs Grid */}
+      {!isLoading && (photos.length > 0 || gifs.length > 0) && (
         <>
           <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4">
+            {/* Unsplash Photos */}
             {photos.map((photo) => (
               <UnsplashPhotoCard
-                key={photo.id}
+                key={`unsplash-${photo.id}`}
                 photo={photo}
                 onSave={handleSavePhoto}
                 isSaved={savedPhotoIds.has(photo.id)}
+              />
+            ))}
+
+            {/* Giphy GIFs */}
+            {gifs.map((gif) => (
+              <GiphyPhotoCard
+                key={`giphy-${gif.id}`}
+                gif={gif}
+                onSave={handleSaveGif}
+                isSaved={savedGifIds.has(gif.id)}
               />
             ))}
           </div>
@@ -238,7 +298,7 @@ export default function DiscoverPage() {
       )}
 
       {/* Empty State */}
-      {!isLoading && !isSearching && photos.length === 0 && (
+      {!isLoading && !isSearching && photos.length === 0 && gifs.length === 0 && (
         <div className="text-center py-20">
           <svg
             className="mx-auto h-12 w-12 text-gray-400"
@@ -257,17 +317,24 @@ export default function DiscoverPage() {
           <p className="mt-2 text-sm text-gray-500">
             {searchQuery
               ? 'Try searching with different keywords'
-              : 'Unable to load photos at this time'}
+              : 'Unable to load images at this time'}
           </p>
         </div>
       )}
 
-      {/* Save to Board Modal */}
+      {/* Save to Board Modals */}
       <SaveUnsplashToBoardModal
-        isOpen={showSaveModal}
-        onClose={handleCloseModal}
+        isOpen={showUnsplashSaveModal}
+        onClose={handleCloseUnsplashModal}
         photo={selectedPhoto}
-        onSuccess={handleSaveSuccess}
+        onSuccess={handlePhotoSaveSuccess}
+      />
+
+      <SaveGiphyToBoardModal
+        isOpen={showGiphySaveModal}
+        onClose={handleCloseGiphyModal}
+        gif={selectedGif}
+        onSuccess={handleGifSaveSuccess}
       />
     </div>
   )
