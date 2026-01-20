@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { cloudinaryConfig } from '@/lib/cloudinary'
 import { redirect } from 'next/navigation'
 import { UnsplashPhoto } from './unsplash'
+import { GiphyImage } from './giphy'
 
 // =====================================================
 // TYPE DEFINITIONS
@@ -11,6 +12,13 @@ import { UnsplashPhoto } from './unsplash'
 
 export interface SaveUnsplashPinParams {
   unsplashPhoto: UnsplashPhoto
+  boardId: string
+  title?: string
+  description?: string
+}
+
+export interface SaveGiphyPinParams {
+  giphyImage: GiphyImage
   boardId: string
   title?: string
   description?: string
@@ -198,6 +206,99 @@ export async function saveUnsplashPin(params: SaveUnsplashPinParams): Promise<Sa
     }
   } catch (error) {
     console.error('Error saving Unsplash pin:', error)
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to save pin',
+    }
+  }
+}
+
+/**
+ * Save a Giphy GIF as a pin
+ * @param params - Parameters for saving the Giphy pin
+ * @returns Result indicating success or error
+ */
+export async function saveGiphyPin(params: SaveGiphyPinParams): Promise<SavePinResult> {
+  try {
+    // 1. Authenticate user
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      redirect('/login')
+    }
+
+    const { giphyImage, boardId, title, description } = params
+
+    // 2. Upload Giphy GIF URL to Cloudinary
+    console.log('Uploading Giphy GIF to Cloudinary:', giphyImage.images.original.url)
+    const cloudinaryResult = await uploadUrlToCloudinary(giphyImage.images.original.url)
+
+    // 3. Create pin record in database
+    const pinTitle = title || giphyImage.title || 'Untitled GIF'
+    const attribution = giphyImage.user
+      ? {
+          creator: giphyImage.user.display_name,
+          creatorUrl: giphyImage.user.profile_url,
+          giphyUrl: giphyImage.url,
+        }
+      : {
+          giphyUrl: giphyImage.url,
+        }
+
+    const { data: pin, error: pinError } = await supabase
+      .from('pins')
+      .insert({
+        title: pinTitle,
+        description: description || null,
+        image_url: cloudinaryResult.secure_url,
+        image_width: cloudinaryResult.width,
+        image_height: cloudinaryResult.height,
+        source_url: giphyImage.url,
+        created_by: user.id,
+        source: 'giphy',
+        attribution: attribution,
+      })
+      .select()
+      .single()
+
+    if (pinError) {
+      console.error('Failed to create pin in database:', pinError)
+      throw new Error(pinError.message)
+    }
+
+    if (!pin) {
+      throw new Error('Failed to create pin')
+    }
+
+    // 4. Add pin to board
+    const { error: boardPinError } = await supabase
+      .from('board_pins')
+      .insert({
+        board_id: boardId,
+        pin_id: pin.id,
+      })
+
+    if (boardPinError) {
+      console.error('Failed to add pin to board:', boardPinError)
+      // Rollback: delete the pin
+      await supabase.from('pins').delete().eq('id', pin.id)
+      throw new Error(`Failed to add pin to board: ${boardPinError.message}`)
+    }
+
+    console.log('Successfully saved Giphy pin:', pin.id)
+
+    return {
+      success: true,
+      pin: {
+        id: pin.id,
+        title: pin.title,
+        image_url: pin.image_url,
+        created_by: pin.created_by,
+      },
+    }
+  } catch (error) {
+    console.error('Error saving Giphy pin:', error)
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to save pin',
