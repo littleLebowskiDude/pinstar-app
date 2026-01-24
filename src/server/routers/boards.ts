@@ -38,6 +38,7 @@ export const boardsRouter = router({
   getById: publicProcedure
     .input(z.object({ id: z.string().uuid() }))
     .query(async ({ ctx, input }) => {
+      // First fetch the board without board_pins
       const { data: board, error } = await ctx.supabase
         .from('boards')
         .select(`
@@ -47,22 +48,6 @@ export const boardsRouter = router({
             username,
             display_name,
             avatar_url
-          ),
-          board_pins (
-            pin_id,
-            position,
-            added_at,
-            pins (
-              id,
-              title,
-              description,
-              image_url,
-              image_width,
-              image_height,
-              source_url,
-              source,
-              attribution
-            )
           )
         `)
         .eq('id', input.id)
@@ -76,7 +61,33 @@ export const boardsRouter = router({
         throw new Error('Unauthorized')
       }
 
-      return board
+      // Fetch board_pins separately - bypasses potential RLS issues
+      // We already verified access above, so we can safely fetch the pins
+      const { data: boardPins } = await ctx.supabase
+        .from('board_pins')
+        .select(`
+          pin_id,
+          position,
+          added_at,
+          pins (
+            id,
+            title,
+            description,
+            image_url,
+            image_width,
+            image_height,
+            source_url,
+            source,
+            attribution
+          )
+        `)
+        .eq('board_id', input.id)
+        .order('position', { ascending: true })
+
+      return {
+        ...board,
+        board_pins: boardPins || []
+      }
     }),
 
   /**
