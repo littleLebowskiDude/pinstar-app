@@ -29,7 +29,7 @@ export default function ProfileContent({ user }: ProfileContentProps) {
 
   // Transform pins for display
   const transformedPins = pins.map((pin: any) => ({
-    id: parseInt(pin.id) || 0,
+    id: pin.id,
     title: pin.title,
     description: pin.description,
     imageUrl: pin.image_url,
