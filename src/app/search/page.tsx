@@ -215,7 +215,7 @@ export default function SearchPage() {
               <div key={pin.id} className="flex-none w-64">
                 <PinCard
                   pin={{
-                    id: parseInt(pin.id) || 0,
+                    id: pin.id,
                     title: pin.title,
                     description: pin.description || undefined,
                     imageUrl: pin.image_url,
