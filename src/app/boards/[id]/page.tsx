@@ -16,6 +16,7 @@ async function getBoard(id: string, userId?: string) {
     ? `is_private.eq.false,owner_id.eq.${userId}`
     : 'is_private.eq.false'
 
+  // First, fetch the board without board_pins to check access
   const { data: board, error } = await supabase
     .from('boards')
     .select(`
@@ -25,22 +26,6 @@ async function getBoard(id: string, userId?: string) {
         username,
         display_name,
         avatar_url
-      ),
-      board_pins (
-        pin_id,
-        position,
-        added_at,
-        pins (
-          id,
-          title,
-          description,
-          image_url,
-          image_width,
-          image_height,
-          source_url,
-          source,
-          attribution
-        )
       )
     `)
     .eq('id', id)
@@ -51,7 +36,34 @@ async function getBoard(id: string, userId?: string) {
     return null
   }
 
-  return board
+  // Now fetch board_pins separately - bypass RLS by filtering explicitly
+  // We already verified access above, so we can safely fetch the pins
+  const { data: boardPins } = await supabase
+    .from('board_pins')
+    .select(`
+      pin_id,
+      position,
+      added_at,
+      pins (
+        id,
+        title,
+        description,
+        image_url,
+        image_width,
+        image_height,
+        source_url,
+        source,
+        attribution
+      )
+    `)
+    .eq('board_id', id)
+    .order('position', { ascending: true })
+
+  // Combine the data
+  return {
+    ...board,
+    board_pins: boardPins || []
+  }
 }
 
 export default async function BoardPage({ params }: BoardPageProps) {
