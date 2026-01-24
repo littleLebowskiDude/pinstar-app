@@ -9,7 +9,7 @@ interface PinPageProps {
 
 export default async function PinPage({ params }: PinPageProps) {
   const { id } = await params
-  const pin = MOCK_PINS.find((p) => p.id === parseInt(id))
+  const pin = MOCK_PINS.find((p) => p.id === id)
 
   if (!pin) {
     notFound()
@@ -171,7 +171,7 @@ export default async function PinPage({ params }: PinPageProps) {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PinPageProps) {
   const { id } = await params
-  const pin = MOCK_PINS.find((p) => p.id === parseInt(id))
+  const pin = MOCK_PINS.find((p) => p.id === id)
 
   if (!pin) {
     return {
